@@ -48,7 +48,7 @@ export default {
   methods: {
     start() {
       this.isRunnig = true;
-      this.interval = setInterval(() => { this.time += 1; }, 100);
+      this.interval = setInterval(() => { this.time += 1; }, 1000);
     },
     stop() {
       this.isRunnig = false;
@@ -90,7 +90,7 @@ export default {
 }
 
 .timetable__container {
-  min-width: 99px;
+  min-width: 100px;
   display: flex;
   justify-content: center;
 }
