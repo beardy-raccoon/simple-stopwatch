@@ -92,7 +92,7 @@ export default {
   font-size: 22px;
   line-height: 21px;
   min-width: 30px;
-  text-align: right;
+  text-align: center;
 }
 
 .buttons {
