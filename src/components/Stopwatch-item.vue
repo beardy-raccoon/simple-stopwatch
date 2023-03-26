@@ -2,7 +2,7 @@
   <div :class="`stopwatch-container stopwatch-container${stopwatchState}`">
     <div :class="`timetable timetable${stopwatchState}`">
       <p v-if="time === 0" class="time">{{ time }}</p>
-      <p v-else-if="time > 0 && time < 60" class="time">{{ time }}</p>
+      <p v-else-if="time > 0 && time < 60" class="time">{{ getSeconds }}</p>
       <p v-else-if="time >= 60 && time < 3600" class="time">{{ `${getMinutes}:${getSeconds}` }}</p>
       <p v-else-if="time >= 3600" class="time">{{ `${getHours}:${getMinutes}:${getSeconds}` }}</p>
     </div>
@@ -44,7 +44,7 @@ export default {
   methods: {
     start() {
       this.isRunnig = true;
-      this.interval = setInterval(() => { this.time += 1; }, 1000);
+      this.interval = setInterval(() => { this.time += 1; }, 100);
     },
     stop() {
       this.isRunnig = false;
