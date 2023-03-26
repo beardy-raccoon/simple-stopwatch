@@ -1,12 +1,16 @@
 <template>
   <div :class="`stopwatch-container stopwatch-container${stopwatchState}`">
     <div :class="`timetable timetable${stopwatchState}`">
-      <p v-if="time === 0" class="time">{{ time }}</p>
-      <p v-else-if="time > 0 && time < 60" class="time">{{ getSeconds }}</p>
-      <p v-else-if="time >= 60 && time < 3600" class="time">{{ `${getMinutes}:${getSeconds}` }}</p>
-      <p v-else-if="time >= 3600" class="time">{{ `${getHours}:${getMinutes}:${getSeconds}` }}</p>
+      <div class="timetable__container">
+        <p v-if="time >= 3600" class="timetable__time">{{ getHours }}</p>
+        <span v-if="time >= 3600">:</span>
+        <p v-if="time >= 60" class="timetable__time">{{ getMinutes }}</p>
+        <span v-if="time >= 60">:</span>
+        <p v-if="time > 0" class="timetable__time">{{ getSeconds }}</p>
+        <p v-else class="timetable__time">{{ time }}</p>
+      </div>
     </div>
-    <div class="buttons">
+    <div class="timetable__buttons">
       <button v-if="!isRunnig" @click="start" class="button start-btn"></button>
       <button v-else @click="stop" :class="`button stop-btn${stopwatchState}`"></button>
       <button @click="reset" :class="`button reset-btn${stopwatchState}`"></button>
@@ -44,7 +48,7 @@ export default {
   methods: {
     start() {
       this.isRunnig = true;
-      this.interval = setInterval(() => { this.time += 1; }, 1000);
+      this.interval = setInterval(() => { this.time += 1; }, 100);
     },
     stop() {
       this.isRunnig = false;
@@ -85,7 +89,13 @@ export default {
   border-color: #fff;
 }
 
-.time {
+.timetable__container {
+  min-width: 99px;
+  display: flex;
+  justify-content: center;
+}
+
+.timetable__time {
   font-family: 'Gotham Pro';
   font-style: normal;
   font-weight: 400;
@@ -93,9 +103,10 @@ export default {
   line-height: 21px;
   min-width: 30px;
   text-align: center;
+  margin: 0;
 }
 
-.buttons {
+.timetable__buttons {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,4 +132,5 @@ export default {
 
 .reset-btn_active {
   background-image: url(../assets/images/reset-active.svg);
-}</style>
+}
+</style>
