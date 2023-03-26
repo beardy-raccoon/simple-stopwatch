@@ -51,7 +51,7 @@ export default {
 }
 
 .page {
-  height: 100vh;
+  min-height: 100vh;
   background-color: #353638;
   margin: 0 auto;
 }
