@@ -2,16 +2,16 @@
   <div :class="`stopwatch-container stopwatch-container${stopwatchState}`">
     <div :class="`timetable timetable${stopwatchState}`">
       <div class="timetable__container">
-        <p v-if="time >= 3600" class="timetable__time">{{ getHours }}</p>
-        <span v-if="time >= 3600">:</span>
-        <p v-if="time >= 60" class="timetable__time">{{ getMinutes }}</p>
-        <span v-if="time >= 60">:</span>
-        <p v-if="time > 0" class="timetable__time">{{ getSeconds }}</p>
-        <p v-else class="timetable__time">{{ time }}</p>
+        <p v-if="elapsedTime >= 3600000" class="timetable__time">{{ getHours }}</p>
+        <span v-if="elapsedTime >= 3600000">:</span>
+        <p v-if="elapsedTime >= 60000" class="timetable__time">{{ getMinutes }}</p>
+        <span v-if="elapsedTime >= 60000">:</span>
+        <p v-if="elapsedTime > 0" class="timetable__time">{{ getSeconds }}</p>
+        <p v-else class="timetable__time">{{ startTime }}</p>
       </div>
     </div>
     <div class="timetable__buttons">
-      <button v-if="!isRunnig" @click="start" class="button start-btn"></button>
+      <button v-if="!isRunning" @click="start" class="button start-btn"></button>
       <button v-else @click="stop" :class="`button stop-btn${stopwatchState}`"></button>
       <button @click="reset" :class="`button reset-btn${stopwatchState}`"></button>
     </div>
@@ -22,42 +22,58 @@
 export default {
   data() {
     return {
-      time: 0,
-      isRunnig: false,
-      interval: null,
+      startTime: 0,
+      pausedTime: 0,
+      elapsedTime: 0,
+      isRunning: false,
+      requestId: null,
     };
   },
   computed: {
     stopwatchState() {
-      if (this.isRunnig) return '_active';
+      if (this.isRunning) return '_active';
       return '';
     },
     getHours() {
-      const hours = parseInt(this.time / 3600, 10);
+      const hours = Math.floor(this.elapsedTime / 3600000);
       return hours < 10 ? `0${hours}` : hours;
     },
     getMinutes() {
-      const minutes = parseInt(this.time / 60, 10) % 60;
+      const minutes = Math.floor((this.elapsedTime % 3600000) / 60000);
       return minutes < 10 ? `0${minutes}` : minutes;
     },
     getSeconds() {
-      const seconds = this.time % 60;
+      const seconds = Math.floor((this.elapsedTime % 60000) / 1000);
       return seconds < 10 ? `0${seconds}` : seconds;
     },
   },
   methods: {
     start() {
-      this.isRunnig = true;
-      this.interval = setInterval(() => { this.time += 1; }, 1000);
+      this.isRunning = true;
+      if (this.elapsedTime === 0) {
+        this.startTime = Date.now();
+      } else {
+        this.startTime = Date.now() - this.pausedTime;
+      }
+      this.tick();
+    },
+    tick() {
+      this.elapsedTime = Date.now() - this.startTime;
+      this.requestId = requestAnimationFrame(() => {
+        this.tick();
+      });
     },
     stop() {
-      this.isRunnig = false;
-      clearInterval(this.interval);
+      this.isRunning = false;
+      cancelAnimationFrame(this.requestId);
+      this.pausedTime = this.elapsedTime;
     },
     reset() {
-      this.isRunnig = false;
-      clearInterval(this.interval);
-      this.time = 0;
+      this.isRunning = false;
+      cancelAnimationFrame(this.requestId);
+      this.startTime = 0;
+      this.pausedTime = 0;
+      this.elapsedTime = 0;
     },
   },
 };
