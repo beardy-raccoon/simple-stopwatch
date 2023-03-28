@@ -1,12 +1,14 @@
 <template>
   <div class="page">
     <main class="content">
-      <div v-for="(item, index) in stopwatches" :key="index">
-        <Stopwatch />
-      </div>
-      <div class="add-button-container">
-        <button @click="addStopwatch" class="button add-button"></button>
-      </div>
+      <ul class="stopwatches-list">
+        <li v-for="(item, index) in stopwatches" :key="index" class="stopwatches-list__item">
+          <Stopwatch />
+        </li>
+        <li class="add-button-container">
+          <button @click="addStopwatch" class="button add-button"></button>
+        </li>
+      </ul>
     </main>
   </div>
 </template>
@@ -58,12 +60,18 @@ export default {
 
 .content {
   margin: 0 auto;
-  padding: 72px 212px;
   max-width: 1200px;
+  padding: 72px 212px;
+}
+
+.stopwatches-list {
+  margin: 0;
+  padding: 0;
   display: grid;
   justify-content: center;
   grid-template-columns: repeat(3, 225px);
   gap: 50px;
+  list-style: none;
 }
 
 .button {
@@ -87,7 +95,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 225px;
+  width: 225px;
   height: 120px;
   background-color: #696969;
 }
@@ -97,7 +105,7 @@ export default {
 }
 
 @media screen and (max-width: 1023px) {
-  .content {
+  .stopwatches-list {
     padding: 72px 135px;
     flex-wrap: wrap;
     grid-template-columns: repeat(2, 225px);
@@ -105,7 +113,7 @@ export default {
 }
 
 @media screen and (max-width: 767px) {
-  .content {
+  .stopwatches-list {
     padding: 72px 46px;
     grid-template-columns: 225px;
   }
